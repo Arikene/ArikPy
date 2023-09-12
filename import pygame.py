@@ -80,9 +80,10 @@ while running:
         player2_y += player2_speed
 #Bullet loop
     if keys[pygame.K_SPACE]:
-      bullet_status = 'fire'
+      bullet_status = 'fire':
       bulletX += bulletX_change              
-
+      fire_bullet(bulletX, bulletY, bulletimg)
+        
     # Boundary checking for player 2
     player2_x = max(323, min(player2_x, 626-78))
     player2_y = max(0, min(player2_y, 436-76))
