@@ -108,13 +108,13 @@ while running:
 
     # Handle player 1 movement (arrow keys)
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
+    if keys[pygame.K_a]:
         player1_x -= player1_speed
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_d]:
         player1_x += player1_speed
-    if keys[pygame.K_UP]:
+    if keys[pygame.K_w]:
         player1_y -= player1_speed
-    if keys[pygame.K_DOWN]:
+    if keys[pygame.K_s]:
         player1_y += player1_speed
 
     # Boundary checking for player 1
@@ -122,13 +122,13 @@ while running:
     player1_y = max(0, min(player1_y, 436 - 76))
 
     # Handle player 2 movement (WASD keys)
-    if keys[pygame.K_a]:
+    if keys[pygame.K_LEFT]:
         player2_x -= player2_speed
-    if keys[pygame.K_d]:
+    if keys[pygame.K_RIGHT]:
         player2_x += player2_speed
-    if keys[pygame.K_w]:
+    if keys[pygame.K_UP]:
         player2_y -= player2_speed
-    if keys[pygame.K_s]:
+    if keys[pygame.K_DOWN]:
         player2_y += player2_speed
     # Boundary checking for player 2
     player2_x = max(0, min(player2_x, 626 - 78))
