@@ -23,6 +23,18 @@ player1_x = 75
 player1_y = 150
 player1_speed = 5  # Adjust this value as needed
 
+# Players health
+player1_health = 100
+player2_health = 100
+# Health bar configuration
+health_bar_length = 100
+health_bar_height = 10
+health_bar_color = (255, 255, 255)  # white color
+
+# Function to draw a health bar
+def draw_health_bar(x, y, health):
+    pygame.draw.rect(screen, health_bar_color, (x, y, health, health_bar_height))
+
 # Player 2
 player2_img = pygame.image.load("sasuke.png")
 player2_x = 480
@@ -86,7 +98,6 @@ def iscollision2(player1_X, player1_Y, bulletX, bulletY):
     else:
         return False
 
-
 def show_score(x, y):
     score = font.render("Score: " + str(score_value), True, (255,255,255))
     screen.fill((0,0,0))
@@ -95,9 +106,6 @@ def show_score(x, y):
 def game_over():
     go = font.render("GAME OVER", True, (255,255,255))
     screen.blit(go, (290, 300))
-
-
-
 
 # Main game loop
 running = True
@@ -139,6 +147,10 @@ while running:
     if collision:
         bullet_status = "ready"  # Reset Player 1's bullet
         score_value += 1  # Increase the score
+        player2_health -= 1 # Decrease health when hit
+    # Update health bar position
+    health_bar_x1 = player1_x
+    health_bar_y1 = player1_y - 20  # Adjust the position above the player
 
     # Bullet loop for player 1
     if keys[pygame.K_LSHIFT]:
@@ -158,7 +170,12 @@ while running:
     collision_player2 = iscollision2(player1_x, player1_y, bulletX_player2, bulletY_player2)
     if collision_player2:
         bullet_status_player2 = "ready"  # Reset Player 2's bullet
+        player1_health -= 1
         # Perform actions when player1 is hit by player2's bullet (e.g., decrease player1's health)
+        # Update health bar position
+    health_bar_x2 = player2_x
+    health_bar_y2 = player2_y - 20  # Adjust the position above the player
+
 
     # Bullet loop for player 2
     if keys[pygame.K_RSHIFT]:
@@ -187,6 +204,9 @@ while running:
     if bullet_status_player2 == "fire":
         draw_bullet_player2(bulletX_player2, bulletY_player2, bulletimg_player2)
 
+    # Draw health bar for player 1
+    draw_health_bar(health_bar_x1, health_bar_y1, player1_health)
+    draw_health_bar(health_bar_x2,health_bar_y2,player2_health)
     # Update the display
     pygame.display.update()
 
@@ -194,3 +214,4 @@ while running:
     Clock.tick(60)
 
 pygame.quit()
+
