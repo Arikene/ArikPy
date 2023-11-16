@@ -1,4 +1,6 @@
 import pygame
+import math
+
 # Initialize pygame
 pygame.init()
 
@@ -27,6 +29,21 @@ player2_x = 480
 player2_y = 150
 player2_speed = 5  # Adjust this value as needed
 
+# Bulletimg
+bulletimg = pygame.image.load('rasengan.png')
+bulletX = 75
+bulletY = 150
+bulletX_change = 10  # Adjust this value as needed
+bulletY_change = 0
+bullet_status = "ready"
+
+#score
+score_value = 0
+font = pygame.font.SysFont('freesansbold.ttf', 32)
+textX = 600
+textY = 100
+
+
 # Create a clock object to control frame rate
 Clock = pygame.time.Clock()
 
@@ -34,18 +51,30 @@ Clock = pygame.time.Clock()
 def draw_player(x, y, img):
     screen.blit(img, (x, y))
 
-#Bulletimg
-bulletimg = pygame.image.load('rasengan1.png')
-bulletX = 75 
-bulletY = 150
-bulletX_change = 1
-bulletY_change = 5
-bullet_status = "ready"
+# Function to draw a bullet
+def draw_bullet(x, y, img):
+    screen.blit(img, (x, y))
 
-def fire_bullet(x, y, img):
-    global bullet_status
-    bullet_status = "fire"
-    screen.blit(bulletimg, (player1_x, player1_y - 10))
+def iscollision(player2_X, player2_Y, bulletX, bulletY):
+    dX = (math.pow((player2_X - bulletX), 2))
+    dY = (math.pow((player2_Y - bulletY), 2))
+    distance = math.sqrt(dX+dY) #Actually it's indicating player's body size, Where the bullet will stop
+    if distance <10 :
+        return True
+    else:
+        return False
+
+def show_score(x, y):
+    score = font.render("Score: " + str(score_value), True, (255,255,255))
+    screen.fill((0,0,0))
+    screen.blit(score, (x, y))
+
+def game_over():
+    go = font.render("GAME OVER", True, (255,255,255))
+    screen.blit(go, (290, 300))
+
+
+
 
 # Game loop
 running = True
@@ -66,7 +95,7 @@ while running:
         player1_y += player1_speed
 
     # Boundary checking for player 1
-    player1_x = max(0, min(player1_x, 323 - 70))
+    player1_x = max(0, min(player1_x, 626 - 70))
     player1_y = max(0, min(player1_y, 436 - 76))
 
     # Handle player 2 movement (WASD keys)
@@ -78,15 +107,30 @@ while running:
         player2_y -= player2_speed
     if keys[pygame.K_s]:
         player2_y += player2_speed
-#Bullet loop
+
+        # Check for collision between bullet and player2
+    collision = iscollision(player2_x, player2_y, bulletX, bulletY)
+    if collision:
+        bullet_status = "ready"  # Reset the bullet
+        score_value += 1  # Increase the score
+
+    # Bullet loop
     if keys[pygame.K_SPACE]:
-      bullet_status = 'fire':
-      bulletX += bulletX_change              
-      fire_bullet(bulletX, bulletY, bulletimg)
-        
+        if bullet_status == "ready":
+            bulletX = player1_x + 30  # Adjusted the starting position of the bullet
+            bulletY = player1_y
+            bullet_status = "fire"
+
+    # Move the bullet
+    if bullet_status == "fire":
+        bulletX += bulletX_change
+        # Reset bullet when it goes off the screen
+        if bulletX >= 626:
+            bullet_status = "ready"
+
     # Boundary checking for player 2
-    player2_x = max(323, min(player2_x, 626-78))
-    player2_y = max(0, min(player2_y, 436-76))
+    player2_x = max(0, min(player2_x, 626 - 78))
+    player2_y = max(0, min(player2_y, 436 - 76))
 
     # Clear the screen
     screen.blit(background, (0, 0))
@@ -94,7 +138,11 @@ while running:
     # Draw players
     draw_player(player1_x, player1_y, player1_img)
     draw_player(player2_x, player2_y, player2_img)
-    fire_bullet(bulletX,bulletY, bulletimg)
+
+    # Draw bullet only when it's fired
+    if bullet_status == "fire":
+        draw_bullet(bulletX, bulletY, bulletimg)
+
     # Update the display
     pygame.display.update()
 
@@ -102,4 +150,3 @@ while running:
     Clock.tick(60)
 
 pygame.quit()
-
