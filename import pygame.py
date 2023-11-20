@@ -20,13 +20,13 @@ background = pygame.image.load("2.png")
 
 #music effect
 super_bullet_sound = pygame.mixer.Sound("rasengan.mp3")
-chidori_sound = pygame.mixer.Sound("chidori (.mp3")
+chidori_sound = pygame.mixer.Sound("katon_no_jutsu.mp3")
+dunno = pygame.mixer.Sound("naruto.mp3")
 
 
-
-super_bullet_channel = pygame.mixer.Channel(0)
+super_bullet_channel = pygame.mixer.Channel(1)
 chidori_channel = pygame.mixer.Channel(1)
-
+dunno_channel = pygame.mixer.Channel(1)
 
 # Player 1
 player1_img = pygame.image.load("naruto2.png")
@@ -56,7 +56,7 @@ player2_speed = 5  # Adjust this value as needed
 bulletimg = pygame.image.load('rasengan.png')
 bulletX = 75
 bulletY = 150
-bulletX_change = 10  # Adjust this value as needed
+bulletX_change = 15  # Adjust this value as needed
 bulletY_change = 0
 bullet_status = "ready"
 
@@ -82,9 +82,28 @@ super_energy_bar_length = 100
 super_energy_bar_height = 10
 super_energy_bar_color = (255, 0, 0)
 
+#Super Bullet for Super_Powers
+super_bullet2 =pygame.image.load("fireball.png")
+super_bulletX2 = 480
+super_bulletY2 = 150
+super_bullet_X2_change = -7
+super_bullet_Y2_change = 0
+super_bullet_status2 = "ready"
+
+#Super_Energy_Bar
+super_energy2 = 0
+super_energy_bar_length2 = 100
+super_energy_bar_height2 = 10
+super_energy_bar_color2 = (255, 0, 0)
+
+
 # Super Energy regeneration variables
-regeneration_rate = 20  # health points per second
+regeneration_rate = 1  # health points per second
 last_regeneration_time = time.time()
+
+# Super Energy regeneration variables
+regeneration_rate2 = 1  # health points per second
+last_regeneration_time2 = time.time()
 
 #supper_bullet_bar
 def draw_super_bullet_bar(x, y, super_energy, max_super_energy):
@@ -92,11 +111,19 @@ def draw_super_bullet_bar(x, y, super_energy, max_super_energy):
     super_energy_width = (super_energy / max_super_energy) * super_energy_bar_length
     pygame.draw.rect(screen, super_energy_bar_color, (x, y, super_energy_width, super_energy_bar_height))
 
+def draw_super_bullet_bar2(x, y, super_energy2, max_super_energy2):
+    # Calculate the width of the super energy bar based on the current super energy level
+    super_energy_width2 = (super_energy2 / max_super_energy2) * super_energy_bar_length2
+    pygame.draw.rect(screen, super_energy_bar_color2, (x, y, super_energy_width2, super_energy_bar_height2))
+
 # Function to draw a bullet for player 2
 def draw_bullet_player2(x, y, img):
     screen.blit(img, (x, y))
 #Function to draw the Super Bullet for player 1
 def draw_super_bullet(x,y, img):
+    screen.blit(img,(x,y))
+
+def draw_super_bullet2(x,y, img):
     screen.blit(img,(x,y))
 
 #score
@@ -153,7 +180,14 @@ def iscollision3(player2_X, player2_Y, super_bulletX, super_bulletY):
     else:
         return False
 
-
+def iscollision4(player1_X, player1_Y, super_bulletX2, super_bulletY2):
+    dX = (math.pow((player1_X - super_bulletX2), 2))
+    dY = (math.pow((player1_Y+20 - super_bulletY2), 2)) #Gotta make calculation using graph paper
+    distance = math.sqrt(dX+dY) #Actually it's indicating player's body size, Where the bullet will stop
+    if distance <42 :
+        return True
+    else:
+        return False
 def show_score(x, y):
     score = font.render("Score: " + str(score_value), True, (255,255,255))
     screen.blit(score, (x, y))
@@ -191,10 +225,18 @@ while running:
     current_time = time.time()
     time_elapsed = current_time - last_regeneration_time
 
-    if time_elapsed >= 1:  # regenerate every second
+    if time_elapsed >= 1/30:  # regenerate every second
         super_energy += regeneration_rate
         super_energy = min(super_energy, 100)  # cap health at 100
         last_regeneration_time = current_time
+
+    current_time2 = time.time()
+    time_elapsed2 = current_time - last_regeneration_time2
+
+    if time_elapsed2 >= 1/30:  # regenerate every second
+        super_energy2 += regeneration_rate2
+        super_energy2 = min(super_energy2, 100)  # cap health at 100
+        last_regeneration_time2 = current_time2
 
 
     # Handle player 1 movement (arrow keys)
@@ -238,12 +280,34 @@ while running:
     # Move the super bullet if it's fired
     if super_bullet_status == "fire":
         super_bulletX += super_bullet_X_change
+        super_bullet_channel.play(super_bullet_sound)
         # Decrease super energy when the super bullet is fired
         super_energy = max(super_energy - 20, 0)
-        super_bullet_channel.play(super_bullet_sound)
+
     # Reset the super_bullet position when it goes off the screen
     if super_bulletX >= 626:
         super_bullet_status = "ready"
+
+    # Check for space key press to throw super bullet2
+    if keys[pygame.K_RCTRL]:
+        if super_energy2 >= 100:  # Check if enough energy to fire
+            if super_bullet_status2 == "ready":
+                super_bulletX2 = player2_x
+                super_bulletY2 = player2_y
+                super_bullet_status2 = "fire"
+
+        # Move the super bullet2 if it's fired
+# I had made an indentation error here and the super_bullet wasn't firing automatically (Learn from Mistake)
+    if super_bullet_status2 == "fire":
+        super_bulletX2 += super_bullet_X2_change
+        chidori_channel.play(chidori_sound)
+            # Decrease super energy when the super bullet is fired
+        super_energy2 = max(super_energy2 - 100, 0)
+
+        # Reset the super_bullet2 position when it goes off the screen
+    if super_bulletX2 <= 0:
+        super_bullet_status2 = "ready"
+
 
     collision3 = iscollision3(player2_x,player2_y,super_bulletX,super_bulletY)
     if collision3:
@@ -251,6 +315,14 @@ while running:
         super_bullet_status = 'ready'
         score_value += 20
         player2_health -= 20
+
+#Collsion for Super Bullet 2
+    collision4 = iscollision4(player1_x,player1_y,super_bulletX2,super_bulletY2)
+    if collision4:
+        super_bulletX2 = 480
+        super_bullet_status2 = 'ready'
+        score_value2 += 20
+        player1_health -= 20
 
     # Check for collision between bullet and player2
     collision = iscollision(player2_x, player2_y, bulletX, bulletY)
@@ -268,12 +340,22 @@ while running:
     #Super_energy_bar_position
     super_energy_bar_x1 = player1_x
     super_energy_bar_y1 = player1_y-40
+    #super energy bar 2 position
+    super_energy_bar_x2 = player2_x
+    super_energy_bar_y2 = player2_y - 40
     #Super_Energy_bar_regeneration
     if super_energy == 100:
         super_bullet_status = "ready"
 
     if super_bullet_status == "fire":
         super_energy = 0
+
+        # Super_Energy_bar_regeneration2
+    if super_energy2 == 100:
+        super_bullet_status2 = "ready"
+
+    if super_bullet_status2 == "fire":
+        super_energy2 = 0
 
     # Bullet loop for player 1
     if keys[pygame.K_LSHIFT]:
@@ -284,6 +366,7 @@ while running:
 
     # Move Player 1's bullet
     if bullet_status == "fire":
+        dunno_channel.play(dunno)
         bulletX += bulletX_change
         # Reset Player 1's bullet when it goes off the screen
         if bulletX >= 626:
@@ -318,8 +401,9 @@ while running:
 
     # Move Player 2's bullet
     if bullet_status_player2 == "fire":
+        dunno_channel.play(dunno)
         bulletX_player2 += bulletX_change_player2
-        chidori_channel.play(chidori_sound)
+
         # Reset Player 2's bullet when it goes off the screen
         if bulletX_player2 <= 0:
             bullet_status_player2 = "ready"
@@ -340,10 +424,13 @@ while running:
         draw_bullet_player2(bulletX_player2, bulletY_player2, bulletimg_player2)
     if super_bullet_status == "fire":
         draw_super_bullet(super_bulletX,super_bulletY,super_bullet)
+    if super_bullet_status2 == "fire":
+        draw_super_bullet2(super_bulletX2,super_bulletY2,super_bullet2)
     # Draw health bar for player 1
     draw_health_bar(health_bar_x1, health_bar_y1, player1_health)
     draw_health_bar(health_bar_x2,health_bar_y2,player2_health)
     draw_super_bullet_bar(super_energy_bar_x1,super_energy_bar_y1,super_energy,100)
+    draw_super_bullet_bar2(super_energy_bar_x2,super_energy_bar_y2,super_energy2,100)
 
     show_score(10,10)
     show_score2(520,10)
