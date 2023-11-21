@@ -80,7 +80,7 @@ super_bullet_status = "ready"
 super_energy = 0
 super_energy_bar_length = 100
 super_energy_bar_height = 10
-super_energy_bar_color = (255, 0, 0)
+super_energy_bar_color = (77, 210, 255)
 
 #Super Bullet for Super_Powers
 super_bullet2 =pygame.image.load("fireball.png")
@@ -94,7 +94,7 @@ super_bullet_status2 = "ready"
 super_energy2 = 0
 super_energy_bar_length2 = 100
 super_energy_bar_height2 = 10
-super_energy_bar_color2 = (255, 0, 0)
+super_energy_bar_color2 = (51, 133, 255)
 
 
 # Super Energy regeneration variables
@@ -130,6 +130,7 @@ def draw_super_bullet2(x,y, img):
 score_value = 0
 score_value2 = 0
 font = pygame.font.SysFont('freesansbold.ttf', 32)
+game_over_font = pygame.font.SysFont("ROBOTO.ttf",80)
 textX = 200
 textY = 300
 
@@ -195,13 +196,13 @@ def show_score2(x,y):
     score = font.render("Score: "+str(score_value2),True,(255,255,255))
     screen.blit(score,(x,y))
 def game_won():
-    won_text = font.render("Player 1 Wins!", True, (174, 167, 167))
-    screen.blit(won_text, (200, 300))
+    won_text = game_over_font.render("Player 1 Wins!", True, (77, 210, 255))
+    screen.blit(won_text, (120, 150))
     pygame.display.update()
     pygame.time.delay(3000)  # Display the message for 3 seconds
 
 def game_won2():
-    won_text = font.render("Player 2 Wins!", True, (174, 167, 167))
+    won_text = game_over_font.render("Player 2 Wins!", True, (174, 167, 167))
     screen.blit(won_text, (200, 300))
     pygame.display.update()
     pygame.time.delay(3000)  # Display the message for 3 seconds
@@ -251,7 +252,7 @@ while running:
         player1_y += player1_speed
 
     # Boundary checking for player 1
-    player1_x = max(0, min(player1_x, 626 - 70))
+    player1_x = max(0, min(player1_x, 313 - 70))
     player1_y = max(0, min(player1_y, 436 - 76))
 
     # Handle player 2 movement (WASD keys)
@@ -264,7 +265,7 @@ while running:
     if keys[pygame.K_DOWN]:
         player2_y += player2_speed
     # Boundary checking for player 2
-    player2_x = max(0, min(player2_x, 626 - 78))
+    player2_x = max(360-70, min(player2_x, 626 - 78))
     player2_y = max(0, min(player2_y, 436 - 76))
 
 
@@ -280,7 +281,7 @@ while running:
     # Move the super bullet if it's fired
     if super_bullet_status == "fire":
         super_bulletX += super_bullet_X_change
-        super_bullet_channel.play(super_bullet_sound)
+        # super_bullet_channel.play(super_bullet_sound)
         # Decrease super energy when the super bullet is fired
         super_energy = max(super_energy - 20, 0)
 
@@ -300,7 +301,7 @@ while running:
 # I had made an indentation error here and the super_bullet wasn't firing automatically (Learn from Mistake)
     if super_bullet_status2 == "fire":
         super_bulletX2 += super_bullet_X2_change
-        chidori_channel.play(chidori_sound)
+        # chidori_channel.play(chidori_sound)
             # Decrease super energy when the super bullet is fired
         super_energy2 = max(super_energy2 - 100, 0)
 
@@ -311,6 +312,7 @@ while running:
 
     collision3 = iscollision3(player2_x,player2_y,super_bulletX,super_bulletY)
     if collision3:
+        super_bullet_channel.play(super_bullet_sound)
         super_bulletX = 75
         super_bullet_status = 'ready'
         score_value += 20
@@ -319,6 +321,7 @@ while running:
 #Collsion for Super Bullet 2
     collision4 = iscollision4(player1_x,player1_y,super_bulletX2,super_bulletY2)
     if collision4:
+        chidori_channel.play(chidori_sound)
         super_bulletX2 = 480
         super_bullet_status2 = 'ready'
         score_value2 += 20
@@ -327,6 +330,7 @@ while running:
     # Check for collision between bullet and player2
     collision = iscollision(player2_x, player2_y, bulletX, bulletY)
     if collision:
+        dunno_channel.play(dunno)
         bulletX = 75
         bullet_status = "ready"  # Reset Player 1's bullet
         score_value += 1  # Increase the score
@@ -366,7 +370,7 @@ while running:
 
     # Move Player 1's bullet
     if bullet_status == "fire":
-        dunno_channel.play(dunno)
+        # dunno_channel.play(dunno)
         bulletX += bulletX_change
         # Reset Player 1's bullet when it goes off the screen
         if bulletX >= 626:
@@ -375,6 +379,7 @@ while running:
     # Check for collision between bullet_player2 and player1
     collision_player2 = iscollision2(player1_x, player1_y, bulletX_player2, bulletY_player2)
     if collision_player2:
+        dunno_channel.play(dunno)
         bulletX_player2 = 480
         bullet_status_player2 = "ready"  # Reset Player 2's bullet
         score_value2 += 1
@@ -401,7 +406,7 @@ while running:
 
     # Move Player 2's bullet
     if bullet_status_player2 == "fire":
-        dunno_channel.play(dunno)
+        # dunno_channel.play(dunno)
         bulletX_player2 += bulletX_change_player2
 
         # Reset Player 2's bullet when it goes off the screen
