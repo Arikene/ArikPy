@@ -94,7 +94,7 @@ super_bullet_status2 = "ready"
 super_energy2 = 0
 super_energy_bar_length2 = 100
 super_energy_bar_height2 = 10
-super_energy_bar_color2 = (51, 133, 255)
+super_energy_bar_color2 = (255, 187, 51)
 
 
 # Super Energy regeneration variables
@@ -202,7 +202,7 @@ def game_won():
     pygame.time.delay(3000)  # Display the message for 3 seconds
 
 def game_won2():
-    won_text = game_over_font.render("Player 2 Wins!", True, (174, 167, 167))
+    won_text = game_over_font.render("Player 2 Wins!", True, (255, 187, 51))
     screen.blit(won_text, (200, 300))
     pygame.display.update()
     pygame.time.delay(3000)  # Display the message for 3 seconds
