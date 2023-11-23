@@ -99,7 +99,7 @@ super_energy_bar_color2 = (255, 187, 51)
 
 # Super Energy regeneration variables
 regeneration_rate = 1  # health points per second
-last_regeneration_time = time.time()
+last_regeneration_time = time.time() #The current time
 
 # Super Energy regeneration variables
 regeneration_rate2 = 1  # health points per second
@@ -146,13 +146,6 @@ def draw_player(x, y, img):
 def draw_bullet(x, y, img):
     screen.blit(img, (x, y))
 
-
-# def iscollision(player2_X, player2_Y, bulletX, bulletY):
-#     if player2_X == bulletX and player2_Y == bulletY:
-#         return True
-#     else:
-#         False
-#
 #
 def iscollision(player2_X, player2_Y, bulletX, bulletY):
     dX = (math.pow((player2_X+20 - bulletX), 2)) #Use +20 , so that the bullet can touch the body
@@ -203,15 +196,11 @@ def game_won():
 
 def game_won2():
     won_text = game_over_font.render("Player 2 Wins!", True, (255, 187, 51))
-    screen.blit(won_text, (200, 300))
+    screen.blit(won_text, (120, 150))
     pygame.display.update()
     pygame.time.delay(3000)  # Display the message for 3 seconds
 
-# def game_over():
-#     font = pygame.font.SysFont('freesansbold.ttf', 64)
-#     go_text = font.render("GAME OVER", True, (255, 255, 255))
-#     screen.blit(go_text, (200, 200))
-#     pygame.display.update
+
 # Main game loop
 clock = pygame.time.Clock()
 running = True
@@ -223,10 +212,10 @@ while running:
             running = False
 
     # Super_energy regeneration logic
-    current_time = time.time()
-    time_elapsed = current_time - last_regeneration_time
+    current_time = time.time()  #Time's value is updated to current one's
+    time_elapsed = current_time - last_regeneration_time  #The previous value of time when it was stored
 
-    if time_elapsed >= 1/30:  # regenerate every second
+    if time_elapsed >= 1/30: #firstly, this is checking if the elapsed time is equal or getter then 1/30 after firing the bullet. if it's true , then super_energy can regenerate. Secondly, it's diving the unit of 1 second to 1/30, if the value was 1 , 1 health point will increase 1 by 1 second
         super_energy += regeneration_rate
         super_energy = min(super_energy, 100)  # cap health at 100
         last_regeneration_time = current_time
@@ -240,7 +229,7 @@ while running:
         last_regeneration_time2 = current_time2
 
 
-    # Handle player 1 movement (arrow keys)
+    # Handle player 1 movement (WASD keys)
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
         player1_x -= player1_speed
@@ -255,7 +244,7 @@ while running:
     player1_x = max(0, min(player1_x, 313 - 70))
     player1_y = max(0, min(player1_y, 436 - 76))
 
-    # Handle player 2 movement (WASD keys)
+    # Handle player 2 movement (arrow keys)
     if keys[pygame.K_LEFT]:
         player2_x -= player2_speed
     if keys[pygame.K_RIGHT]:
