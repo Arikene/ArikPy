@@ -20,7 +20,7 @@ background = pygame.image.load("2.png")
 
 #music effect
 super_bullet_sound = pygame.mixer.Sound("rasengan.mp3")
-chidori_sound = pygame.mixer.Sound("katon_no_jutsu.mp3")
+chidori_sound = pygame.mixer.Sound("fire].mp3")
 dunno = pygame.mixer.Sound("naruto.mp3")
 
 
