@@ -1,7 +1,14 @@
 import pygame
 import math
 import time
-# Initialize pygame
+from video_inro import  play_video_intro
+from level2 import  level2_level
+
+video = 'final intro.mp4'
+bgm = 'final intro.mp3'
+
+play_video_intro(video,bgm)
+
 pygame.init()
 pygame.mixer.init()
 
@@ -192,14 +199,14 @@ def game_won():
     won_text = game_over_font.render("Player 1 Wins!", True, (77, 210, 255))
     screen.blit(won_text, (120, 150))
     pygame.display.update()
-    pygame.time.delay(3000)  # Display the message for 3 seconds
+    pygame.time.delay(1000)  # Display the message for 3 seconds
 
 def game_won2():
     won_text = game_over_font.render("Player 2 Wins!", True, (255, 187, 51))
     screen.blit(won_text, (120, 150))
     pygame.display.update()
     pygame.time.delay(3000)  # Display the message for 3 seconds
-
+    # level2_level()
 
 # Main game loop
 clock = pygame.time.Clock()
@@ -379,7 +386,7 @@ while running:
 
     if player1_health <= 0:
         game_won2()
-
+        level2_level()
         # Perform actions when player1 is hit by player2's bullet (e.g., decrease player1's health)
         # Update health bar position
     health_bar_x2 = player2_x
@@ -433,5 +440,7 @@ while running:
 
     # Control frame rate
     Clock.tick(60)
+
+
 
 pygame.quit()
