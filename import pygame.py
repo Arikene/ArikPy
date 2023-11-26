@@ -16,11 +16,11 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((626, 436))
 
 # Icon
-glowingBall = pygame.image.load("1057917_glowing-ball-png.jpg")
+glowingBall = pygame.image.load("am.png")
 pygame.display.set_icon(glowingBall)
 
 # Title
-pygame.display.set_caption("Arik's Hockey lab")
+pygame.display.set_caption("Shinobi Showdown: Naruto VS Sasuke")
 
 # Background image
 background = pygame.image.load("2.png")
