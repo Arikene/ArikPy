@@ -33,6 +33,9 @@ come = pygame.mixer.Sound("come.mp3")
 half_chakra_sasuke =pygame.mixer.Sound("half chakra.mp3")
 fight = pygame.mixer.music.load("Sasuke Fighting Theme.mp3")
 lost = pygame.mixer.Sound("sasuke loses (2).mp3")
+aggressive = pygame.mixer.Sound("aggressive.mp3")
+katon = pygame.mixer.Sound("kaaton.mp3")
+
 
 super_bullet_channel = pygame.mixer.Channel(1)
 chidori_channel = pygame.mixer.Channel(1)
@@ -40,7 +43,8 @@ dunno_channel = pygame.mixer.Channel(1)
 come_channel = pygame.mixer.Channel(1)
 half_chakra_channel = pygame.mixer.Channel(1)
 sasuke_loses_channel = pygame.mixer.Channel(1)
-
+aggressive_channel = pygame.mixer.Channel(1)
+katon_channel = pygame.mixer.Channel(1)
 
 # Player 1
 player1_img = pygame.image.load("naruto2.png")
@@ -283,6 +287,7 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE] :
         if super_energy >= 100:  # Check if enough energy to fire
+         super_bullet_channel.play(super_bullet_sound)
          if super_bullet_status == "ready":
             super_bulletX = player1_x
             super_bulletY = player1_y
@@ -301,7 +306,8 @@ while running:
 
     # Check for space key press to throw super bullet2
     if keys[pygame.K_RCTRL]:
-        if super_energy2 >= 100:  # Check if enough energy to fire
+        if super_energy2 >= 100: # Check if enough energy to fire
+            katon_channel.play(katon)
             if super_bullet_status2 == "ready":
                 super_bulletX2 = player2_x
                 super_bulletY2 = player2_y
@@ -322,7 +328,6 @@ while running:
 
     collision3 = iscollision3(player2_x,player2_y,super_bulletX,super_bulletY)
     if collision3:
-        super_bullet_channel.play(super_bullet_sound)
         super_bulletX = 75
         super_bullet_status = 'ready'
         score_value += 20
@@ -346,6 +351,9 @@ while running:
         score_value += 1  # Increase the score
         player2_health -= 1 # Decrease health when hit
         # Check if player 2 health reaches zero
+        if 70 <= player2_health <=80 :
+            aggressive_channel.play(aggressive)
+
         if player2_health == 30 :
             half_chakra_channel.play(half_chakra_sasuke)
         if player2_health <= 20:
