@@ -29,11 +29,18 @@ background = pygame.image.load("2.png")
 super_bullet_sound = pygame.mixer.Sound("rasengan.mp3")
 chidori_sound = pygame.mixer.Sound("fire].mp3")
 dunno = pygame.mixer.Sound("naruto.mp3")
-
+come = pygame.mixer.Sound("come.mp3")
+half_chakra_sasuke =pygame.mixer.Sound("half chakra.mp3")
+fight = pygame.mixer.music.load("Sasuke Fighting Theme.mp3")
+lost = pygame.mixer.Sound("sasuke loses (2).mp3")
 
 super_bullet_channel = pygame.mixer.Channel(1)
 chidori_channel = pygame.mixer.Channel(1)
 dunno_channel = pygame.mixer.Channel(1)
+come_channel = pygame.mixer.Channel(1)
+half_chakra_channel = pygame.mixer.Channel(1)
+sasuke_loses_channel = pygame.mixer.Channel(1)
+
 
 # Player 1
 player1_img = pygame.image.load("naruto2.png")
@@ -199,7 +206,7 @@ def game_won():
     won_text = game_over_font.render("Player 1 Wins!", True, (77, 210, 255))
     screen.blit(won_text, (120, 150))
     pygame.display.update()
-    pygame.time.delay(1000)  # Display the message for 3 seconds
+    pygame.time.delay(3000)  # Display the message for 3 seconds
 
 def game_won2():
     won_text = game_over_font.render("Player 2 Wins!", True, (255, 187, 51))
@@ -208,12 +215,19 @@ def game_won2():
     pygame.time.delay(3000)  # Display the message for 3 seconds
     # level2_level()
 
+come_channel.play(come)
+pygame.mixer.music.load("Sasuke Fighting Theme.mp3")
+pygame.mixer.music.set_volume(0.25)  # Set the volume (0.0 to 1.0)
+pygame.mixer.music.play(-1)  # -1 means loop indefinitely
+
+
 # Main game loop
 clock = pygame.time.Clock()
 running = True
 while running:
     screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -332,6 +346,12 @@ while running:
         score_value += 1  # Increase the score
         player2_health -= 1 # Decrease health when hit
         # Check if player 2 health reaches zero
+        if player2_health == 30 :
+            half_chakra_channel.play(half_chakra_sasuke)
+        if player2_health <= 20:
+            half_chakra_channel.play(half_chakra_sasuke)
+        if player2_health <=10:
+            sasuke_loses_channel.play(lost)
 
 
     # Update health bar position
@@ -382,11 +402,13 @@ while running:
         player1_health -= 1
 
     if player2_health <= 0:
+
         game_won()
+
 
     if player1_health <= 0:
         game_won2()
-        level2_level()
+        # level2_level()
         # Perform actions when player1 is hit by player2's bullet (e.g., decrease player1's health)
         # Update health bar position
     health_bar_x2 = player2_x
