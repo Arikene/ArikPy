@@ -35,6 +35,7 @@ fight = pygame.mixer.music.load("Sasuke Fighting Theme.mp3")
 lost = pygame.mixer.Sound("sasuke loses (2).mp3")
 aggressive = pygame.mixer.Sound("aggressive.mp3")
 katon = pygame.mixer.Sound("kaaton.mp3")
+rasengan_damage = pygame.mixer.Sound("rasengan_theme.mp3")
 
 
 super_bullet_channel = pygame.mixer.Channel(1)
@@ -45,6 +46,7 @@ half_chakra_channel = pygame.mixer.Channel(1)
 sasuke_loses_channel = pygame.mixer.Channel(1)
 aggressive_channel = pygame.mixer.Channel(1)
 katon_channel = pygame.mixer.Channel(1)
+rasengan_theme = pygame.mixer.Channel(1)
 
 # Player 1
 player1_img = pygame.image.load("naruto2.png")
@@ -328,6 +330,7 @@ while running:
 
     collision3 = iscollision3(player2_x,player2_y,super_bulletX,super_bulletY)
     if collision3:
+        rasengan_theme.play(rasengan_damage)
         super_bulletX = 75
         super_bullet_status = 'ready'
         score_value += 20
